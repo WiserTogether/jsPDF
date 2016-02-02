@@ -14,7 +14,6 @@
   "license": "MIT",
   "ignore": [
     "**/.*",
-    "libs",
     "CNAME",
     "jspdf.js",
     "examples/jspdf.PLUGINTEMPLATE.js",
