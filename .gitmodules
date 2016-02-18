@@ -12,4 +12,4 @@
 	url = https://github.com/richardassar/zpipe.git
 [submodule "libs/adler32cs.js"]
 	path = libs/adler32cs.js
-	url = https://github.com/chick307/adler32cs.js.git
+	url = https://github.com/WiserTogether/adler32cs.js.git
