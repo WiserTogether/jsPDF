@@ -169,7 +169,8 @@
 	, isDOMElement = function(object) {
 		return typeof object === 'object' && object.nodeType === 1;
 	}
-	, createDataURIFromElement = function(element, format, angle) {
+	, createDataURIFromElement = function(element, format, quality, angle) {
+		format = (''+format).toLowerCase();
 
 		//if element is an image which uses data url defintion, just return the dataurl
 		if (element.nodeName === 'IMG' && element.hasAttribute('src')) {
@@ -225,7 +226,14 @@
 				ctx.drawImage(element, 0, 0, canvas.width, canvas.height);
 			}
 		}
-		return canvas.toDataURL((''+format).toLowerCase() == 'png' ? 'image/png' : 'image/jpeg');
+
+		if (format === '' || format === 'png') {
+			return canvas.toDataURL('image/png');
+		} else if (format === 'jpeg') {
+			return canvas.toDataURL('image/jpeg', quality);
+		} else {
+			throw ('Invalid format ' + format + '!');
+		}
 	}
 	,checkImagesForAlias = function(alias, images) {
 		var cached_info;
@@ -549,7 +557,7 @@
 			var dataAsBinaryString;
 
 			if(isDOMElement(imageData))
-				imageData = createDataURIFromElement(imageData, format, rotation);
+				imageData = createDataURIFromElement(imageData, format, compression, rotation);
 
 			if(notDefined(alias))
 				alias = generateAliasFromData(imageData);
