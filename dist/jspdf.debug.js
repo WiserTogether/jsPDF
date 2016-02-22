@@ -1,7 +1,7 @@
 /** @preserve
  * jsPDF - PDF Document creation from JavaScript
- * Version 1.2.49-git Built on 2016-02-18T16:51
- *                           CommitID 7a977a99b7
+ * Version 1.2.53-git Built on 2016-02-22T15:27
+ *                           CommitID d066c71dc2
  *
  * Copyright (c) 2010-2014 James Hall <james@parall.ax>, https://github.com/MrRio/jsPDF
  *               2010 Aaron Spike, https://github.com/acspike
@@ -2037,7 +2037,7 @@ var jsPDF = (function(global) {
 	 * pdfdoc.mymethod() // <- !!!!!!
 	 */
 	jsPDF.API = {events:[]};
-	jsPDF.version = "1.2.49-debug 2016-02-18T16:51:everettgillert";
+	jsPDF.version = "1.2.53-debug 2016-02-22T15:27:everettgillert";
 
 	if (typeof define === 'function' && define.amd) {
 		define('jsPDF', function() {
@@ -2337,7 +2337,8 @@ var jsPDF = (function(global) {
 	, isDOMElement = function(object) {
 		return typeof object === 'object' && object.nodeType === 1;
 	}
-	, createDataURIFromElement = function(element, format, angle) {
+	, createDataURIFromElement = function(element, format, quality, angle) {
+		format = (''+format).toLowerCase();
 
 		//if element is an image which uses data url defintion, just return the dataurl
 		if (element.nodeName === 'IMG' && element.hasAttribute('src')) {
@@ -2393,7 +2394,14 @@ var jsPDF = (function(global) {
 				ctx.drawImage(element, 0, 0, canvas.width, canvas.height);
 			}
 		}
-		return canvas.toDataURL((''+format).toLowerCase() == 'png' ? 'image/png' : 'image/jpeg');
+
+		if (format === '' || format === 'png') {
+			return canvas.toDataURL('image/png');
+		} else if (format === 'jpeg') {
+			return canvas.toDataURL('image/jpeg', quality);
+		} else {
+			throw ('Invalid format ' + format + '!');
+		}
 	}
 	,checkImagesForAlias = function(alias, images) {
 		var cached_info;
@@ -2717,7 +2725,7 @@ var jsPDF = (function(global) {
 			var dataAsBinaryString;
 
 			if(isDOMElement(imageData))
-				imageData = createDataURIFromElement(imageData, format, rotation);
+				imageData = createDataURIFromElement(imageData, format, compression, rotation);
 
 			if(notDefined(alias))
 				alias = generateAliasFromData(imageData);
